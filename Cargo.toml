@@ -19,16 +19,13 @@ pro-release-commit-message = "chore(release): starting development cycle for {{n
 ff = { version = "0.2", package = "fff" }
 groupy = "0.3.0"
 paired = "0.20.0"
-rayon = "1"
 rand_core = "0.5.1"
 thiserror = "1.0"
 sha2ni = "0.8.1"
 hkdf = "0.8.0"
-
-[workspace]
-members = [
-  "bls-signatures-ffi",
-]
+rand = "0.4"
+byteorder = "1.2"
+failure = "0.1"
 
 [features]
 default = []
@@ -42,3 +39,6 @@ base64-serde = "0.5.1"
 rand_chacha = "0.2.2"
 
 
+[package.metadata.release]
+pre-release-commit-message = "chore(release): release {{version}}"
+pro-release-commit-message = "chore(release): starting development cycle for {{next_version}}"

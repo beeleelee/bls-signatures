@@ -4,7 +4,6 @@ use ff::Field;
 use groupy::{CurveAffine, CurveProjective, EncodedPoint};
 use paired::bls12_381::{Bls12, Fq12, G1Affine, G2Affine, G2Compressed, G2};
 use paired::{Engine, ExpandMsgXmd, HashToCurve, PairingCurveAffine};
-use rayon::prelude::*;
 
 use crate::error::Error;
 use crate::key::*;
@@ -74,8 +73,8 @@ pub fn aggregate(signatures: &[Signature]) -> Result<Signature, Error> {
     }
 
     let res = signatures
-        .into_par_iter()
-        .fold(G2::zero, |mut acc, signature| {
+        .iter()
+        .fold(G2::zero(), |mut acc, signature| {
             acc.add_assign(&signature.0.into_projective());
             acc
         })
@@ -112,8 +111,8 @@ pub fn verify(signature: &Signature, hashes: &[G2], public_keys: &[PublicKey]) -
     }
 
     let mut prepared: Vec<_> = public_keys
-        .par_iter()
-        .zip(hashes.par_iter())
+        .iter()
+        .zip(hashes.iter())
         .map(|(pk, h)| (pk.as_affine().prepare(), h.into_affine().prepare()))
         .collect();
 

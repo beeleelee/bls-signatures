@@ -1,6 +1,5 @@
 extern crate bls_signatures;
 extern crate rand;
-extern crate rayon;
 
 use std::time::{Duration, Instant};
 
@@ -8,7 +7,6 @@ use bls_signatures::paired::bls12_381::G2;
 use bls_signatures::*;
 use rand::{Rng, SeedableRng};
 use rand_chacha::ChaCha8Rng;
-use rayon::prelude::*;
 
 macro_rules! measure {
     ($name:expr, $code:block) => {
@@ -63,8 +61,8 @@ fn run(num_messages: usize) {
     let sigs: Vec<Signature>;
     measure!("signing", num_messages, {
         sigs = messages
-            .par_iter()
-            .zip(private_keys.par_iter())
+            .iter()
+            .zip(private_keys.iter())
             .map(|(message, pk)| pk.sign(message))
             .collect::<Vec<Signature>>();
     });
@@ -82,14 +80,14 @@ fn run(num_messages: usize) {
     let hashes: Vec<G2>;
     measure!("hashing messages", num_messages, {
         hashes = messages
-            .par_iter()
+            .iter()
             .map(|message| hash(message))
             .collect::<Vec<_>>();
     });
     let public_keys: Vec<PublicKey>;
     measure!("extracting public keys", num_messages, {
         public_keys = private_keys
-            .par_iter()
+            .iter()
             .map(|pk| pk.public_key())
             .collect::<Vec<_>>();
     });
