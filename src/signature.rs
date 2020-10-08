@@ -77,11 +77,8 @@ pub fn aggregate(signatures: &[Signature]) -> Result<Signature, Error> {
         .fold(G2::zero(), |mut acc, signature| {
             acc.add_assign(&signature.0.into_projective());
             acc
-        })
-        .reduce(G2::zero, |mut acc, val| {
-            acc.add_assign(&val);
-            acc
         });
+        
 
     Ok(Signature(res.into_affine()))
 }
